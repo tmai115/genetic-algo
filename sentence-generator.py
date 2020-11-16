@@ -40,3 +40,20 @@ class GeneticAlgorithm:
 						string.whitespace),
 					size = self.population_size))
 		self.population = np.array(attributes).T
+
+# Specify fitness function with fitness score being the number of characters in the target 
+# sentence our GA has got correctly:
+
+def fitness_function(individual, target_sentence = "This is a target sentence!"):
+	"""
+	computes the score of a given individual based on its performance
+	approaching the target sentence
+	"""
+
+	assert len(target_sentence) == len(individual)
+	score = np.sum([
+		individual[i] == target_sentence[i]
+		for i in range(len(target_sentence))
+		])
+	return score
+
