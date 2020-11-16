@@ -55,6 +55,24 @@ class GeneticAlgorithm:
 			])
 		self.fitness_scores = scores
 	
+	def roulette_wheel_selection(self):
+		"""
+		Select the fittest individuals based on their fitness scores.
+		Each individual is associated with its index in the input array.
+		args:
+			fitness_scores: numpy array of fitness scores of each
+			individual
+		returns:
+			parents:
+		"""
+		sum_scores = np.sum(np.abs(self.fitness_scores))
+		selection_prob = np.abs(self.fitness_scores) / sum_scores
+
+		parents = random.choices(self.population, weights = selection_prob,
+			k = 2)
+		return parents
+		
+
 
 # Specify fitness function with fitness score being the number of characters in the target 
 # sentence our GA has got correctly:
