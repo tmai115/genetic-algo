@@ -54,7 +54,14 @@ class GeneticAlgorithm:
 			self.fitness_function(individual) for individual in self.population
 			])
 		self.fitness_scores = scores
-	
+
+	def get_best(self):
+		best_fitness_score = max(self.fitness_scores)
+		for each_id in range(len(self.population)):
+			if self.fitness_scores[each_id] == best_fitness_score:
+				best_s = ''.join(self.population[each_id])
+				return best_s
+
 	def roulette_wheel_selection(self):
 		"""
 		Select the fittest individuals based on their fitness scores.
@@ -147,4 +154,44 @@ def fitness_function(individual, target_sentence = "This is a target sentence!")
 		for i in range(len(target_sentence))
 		])
 	return score
+
+
+def main():
+	target_sentence = "This is a target sentence!"
+	np.random.seed(123)
+	MAX_GEN = 100 # termination
+	MAX_SUCCESS = 3 # termination
+	NUM_ATTRIBUTES = len(target_sentence)
+	POPULATION_SIZE = 500
+	MUTATION_PROB = .01
+	CROSSOVER_PROB = .75
+
+	GA = GeneticAlgorithm(fitness_function,
+						  num_attributes=NUM_ATTRIBUTES,
+						  population_size=POPULATION_SIZE,
+						  mutation_prob=MUTATION_PROB,
+						  crossover_prob=CROSSOVER_PROB)
+	GA.initialise_population()
+	scores = []
+	generation_counter = 0
+	success_counter = 0
+
+	while generation_counter < MAX_GEN and success_counter < MAX_SUCCESS:
+		GA.compute_fitness_score()
+		scores.append(np.mean(GA.fitness_scores))
+		print("Generation", generation_counter, ", avg score:",
+			scores[generation_counter],
+			", best:", GA.get_best())
+		if GA.get_best() == target_sentence:
+			success_counter += 1
+		GA.run()
+		generation_counter += 1
+
+	plt.plot(scores)
+	plt.xlabel("Generation")
+	plt.ylabel("Average score per generation")
+	plt.show()
+
+main()
+
 
