@@ -72,6 +72,64 @@ class GeneticAlgorithm:
 			k = 2)
 		return parents
 		
+	def run(self):
+		"""
+		running the genetic algorithm to produce a new generation.
+		"""
+		def cross_over(parents):
+			"""
+			produces a new individual by combining the genetic information
+			of both parents
+			args:
+				individual_1: numpy array representing the chromosomes
+				of the first parent
+				individual_2: numpy array representing the chromosomes of
+				the second parent
+			returns:
+				child: newly created individual by cross over of the 2 parents.
+			"""
+			if np.random.uniform() <= self.crossover_prob:
+				parent_1, parent_2 = parents
+				crossover_point = np.random.choice(
+					range(1, self.num_attributes))
+				child = np.concatenate(
+					(parent_1[:crossover_point],
+					parent_2[crossover_point:]))
+				return child
+			else:
+				return random.choices(parents)[0]
+
+		def mutate(individual):
+			"""
+			produces a new individual by mutating the original one.
+			args:
+				individual: numpy array representing the chromosomes of the parent.
+			returns:
+			new: newly mutated individual.
+			"""
+			new_individual = []
+			for attribute in individual:
+				if np.random.uniform() <= self.mutation_prob:
+					new_individual.append(random.choice(string.ascii_letters))
+				else:
+					new_individual.append(attribute)
+			return new_individual
+
+		new_population = []
+
+		# reproduces the new population
+		for _ in range(self.population_size):
+			parents = self.roulette_wheel_selection()
+			child = cross_over(parents)
+			child = mutate(child)
+			new_population.append(child)
+
+		self.population = np.array(new_population)
+		
+
+
+
+
 
 
 # Specify fitness function with fitness score being the number of characters in the target 
