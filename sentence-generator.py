@@ -41,6 +41,21 @@ class GeneticAlgorithm:
 					size = self.population_size))
 		self.population = np.array(attributes).T
 
+	def compute_fitness_score(self):
+		"""
+		computing the fitness score of the population.
+		args:
+			individual: numpy array representing the chromosome of the
+			parents
+		returns:
+			population_size lists of n length each.
+		"""
+		scores = np.array([
+			self.fitness_function(individual) for individual in self.population
+			])
+		self.fitness_scores = scores
+	
+
 # Specify fitness function with fitness score being the number of characters in the target 
 # sentence our GA has got correctly:
 
